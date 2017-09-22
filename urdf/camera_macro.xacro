@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="sony_ipela" params="prefix">
+
+ <!-- LINKS -->
+    <!-- base link -->
+    <link name="${prefix}base_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.2" length="0.1"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.3" length="0.2"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- pan link -->
+    <link name="${prefix}pan_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="-0.2 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.2" length="0.05"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.3" length="0.1"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- tilt link -->
+    <link name="${prefix}tilt_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${radians(90)}"/>
+        <geometry>
+            <cylinder radius="0.001" length="0.20"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 ${radians(90)}"/>
+        <geometry>
+            <cylinder radius="0.3" length="0.2"/>
+        </geometry>
+      </collision>
+    </link>
+
+
+
+    <joint name="${prefix}joint_pan" type="revolute">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}pan_link"/>
+      <axis xyz="-1 0 0"/>
+      <limit effort="0" lower="${radians(-170)}" upper="${radians(170)}" velocity="${radians(50)}"/>
+    </joint>
+
+    <joint name="${prefix}joint_tilt" type="revolute">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${prefix}pan_link"/>
+      <child link="${prefix}tilt_link"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="${radians(-90)}" upper="${radians(30)}" velocity="${radians(50)}"/>
+    </joint>
+
+  </xacro:macro>
+</robot>

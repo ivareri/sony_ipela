@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <!-- load urdf -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find sony_ipela)/urdf/camera.xacro'"/>
+    <!-- Start node without FT sensor -->
+    <node name="sony_ipela_ptz_interface" pkg="sony_ipela" type="ptz_node" respawn="false" output="screen" required="true"/>
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find sony_ipela)/config/hardware_controllers.yaml" command="load"/>
+
+    <!-- Load controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        args="position_trajectory_controller joint_state_controller --shutdown-timeout 1"/>
+
+    <!-- Load robot state publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <!-- Load image publisher -->
+    <node name="image_publisher" pkg="sony_ipela" type="image_publisher" />
+</launch>
